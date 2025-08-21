@@ -15,9 +15,9 @@ public class BackGroundLoop : MonoBehaviour
     }
     private void Update()
     {
-        if (transform.position.x <= -width)
+        if (transform.position.x < -width)
         {
-            transform.position = new Vector3(width, 0f, 0f);
+            transform.position = new Vector3(width - 0.2f, 0f, 0f);
         }
     }
 }

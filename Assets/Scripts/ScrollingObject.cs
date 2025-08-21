@@ -18,6 +18,5 @@ public class ScrollingObject : MonoBehaviour
             return;
         }
         transform.Translate(Vector3.left *  speed * Time.deltaTime);
-       
     }
 }

@@ -10,10 +10,12 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
 
-    private bool isGrounded =true;
+    private bool isGrounded = true;
     private bool isDead = false;
 
     private GameManager gm;
+    public AudioSource audioSource;
+    public AudioClip dieAudioClip;
 
     private void Awake()
     {
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         gm = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        
     }
     private void Update()
     {
@@ -31,6 +34,7 @@ public class Player : MonoBehaviour
         {
             gm.AddScore(10);
         }
+
         if (isDead)
         {
             return;
@@ -41,6 +45,13 @@ public class Player : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             ++jumpCount;
+
+            audioSource.Play();
+        }
+
+        if (Input.GetMouseButtonUp(0) && rb.linearVelocity.y > 0)
+        {
+            rb.linearVelocity *= 0.5f;
         }
 
         animator.SetBool("Grounded", isGrounded);
@@ -48,7 +59,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Platform"))
+        if (collision.collider.CompareTag("Platform") && collision.contacts[0].normal.y > 0.7f)
         {
             jumpCount = 0;
             isGrounded = true;
@@ -77,5 +88,7 @@ public class Player : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
 
         gm.OnPlayerDead();
+
+        audioSource.PlayOneShot(dieAudioClip);
     }
 }
